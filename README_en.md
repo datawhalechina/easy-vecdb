@@ -134,9 +134,9 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 
 <div align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=datawhalechina/easy-vecdb&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=datawhalechina/easy-vecdb&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=datawhalechina/easy-vecdb&type=Date" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=datawhalechina/easy-vecdb&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=datawhalechina/easy-vecdb&type=Date" />
+  <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=datawhalechina/easy-vecdb&type=Date" />
 </picture>
 </div>
 
