@@ -9,6 +9,7 @@ from annoy import AnnoyIndex  # 需要安装: pip install annoy
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
+from .score_semantics import to_relevance_score
 
 logger = logging.getLogger(__name__)
 
@@ -238,6 +239,8 @@ class AnnoyIndexConstructionModule:
                 results.append({
                     "id": meta.get("id"),
                     "score": float(score),
+                    "raw_score": float(dist),
+                    "relevance_score": to_relevance_score(dist, self.metric),
                     "text": meta.get("text"),
                     "metadata": meta
                 })

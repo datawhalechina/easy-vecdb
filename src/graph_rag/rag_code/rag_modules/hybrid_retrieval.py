@@ -554,6 +554,11 @@ class HybridRetrievalModule:
                         **metadata,
                         "recipe_name": metadata.get("recipe_name", "未知菜品"),
                         "score": result.get("score", 0.0),
+                        "raw_score": result.get(
+                            "raw_score",
+                            result.get("score", 0.0),
+                        ),
+                        "relevance_score": result.get("relevance_score"),
                         "search_type": f"vector_enhanced_{self.config.vector_db}"
                     }
                 )
@@ -618,11 +623,17 @@ class HybridRetrievalModule:
                     seen_doc_ids.add(doc_id)
                     doc.metadata["search_method"] = "vector_enhanced"
                     doc.metadata["round_robin_order"] = len(merged_docs)
-                    # 设置统一的final_score字段（向量得分需要转换）
-                    vector_score = doc.metadata.get("score", 0.0)
-                    # COSINE距离转换为相似度：distance越小，相似度越高
-                    similarity_score = max(0.0, 1.0 - vector_score) if vector_score <= 1.0 else 0.0
-                    doc.metadata["final_score"] = similarity_score
+                    # 新适配器统一返回“越大越相关”的 relevance_score。
+                    # 旧适配器仍沿用原有转换，避免破坏第三方实现。
+                    relevance_score = doc.metadata.get("relevance_score")
+                    if relevance_score is None:
+                        vector_score = doc.metadata.get("score", 0.0)
+                        relevance_score = (
+                            max(0.0, 1.0 - vector_score)
+                            if vector_score <= 1.0
+                            else 0.0
+                        )
+                    doc.metadata["final_score"] = relevance_score
                     merged_docs.append(doc)
         
         # 取前top_k个结果
@@ -636,4 +647,4 @@ class HybridRetrievalModule:
         """关闭资源连接"""
         if self.driver:
             self.driver.close()
-            logger.info("Neo4j连接已关闭") 
+            logger.info("Neo4j连接已关闭")

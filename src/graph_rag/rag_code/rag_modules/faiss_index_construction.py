@@ -13,6 +13,7 @@ import faiss
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
+from .score_semantics import faiss_metric_for_index, to_relevance_score
 logger = logging.getLogger(__name__)
 
 class FAISSIndexConstructionModule:
@@ -332,7 +333,12 @@ class FAISSIndexConstructionModule:
                 
                 result = {
                     "id": metadata["id"],
-                    "score": float(score),  # FAISS返回的是内积分数，值越大相似度越高
+                    "score": float(score),  # 保留既有字段以兼容调用方
+                    "raw_score": float(score),
+                    "relevance_score": to_relevance_score(
+                        score,
+                        faiss_metric_for_index(self.index_type),
+                    ),
                     "text": metadata["text"],
                     "metadata": {
                         "node_id": metadata["node_id"],

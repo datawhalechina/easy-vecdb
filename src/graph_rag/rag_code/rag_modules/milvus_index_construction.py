@@ -22,6 +22,7 @@ from pymilvus import (
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
+from .score_semantics import to_relevance_score
 
 logger = logging.getLogger(__name__)
 
@@ -242,9 +243,15 @@ class MilvusIndexConstructionModule:
             
             final_results = []
             for hit in results[0]:
+                raw_score = float(hit.score)
                 final_results.append({
                     "id": hit.entity.get("chunk_id"),
-                    "score": hit.score,
+                    "score": raw_score,
+                    "raw_score": raw_score,
+                    "relevance_score": to_relevance_score(
+                        raw_score,
+                        self.metric_type,
+                    ),
                     "text": hit.entity.get("text"),
                     "metadata": hit.entity.get("metadata")
                 })
