@@ -12,7 +12,8 @@ DISTANCE_METRICS = {
 
 def faiss_metric_for_index(index_type: str) -> str:
     """返回本项目对应 FAISS 索引构造器实际使用的度量。"""
-    return "L2" if str(index_type).strip().upper() == "HNSW" else "IP"
+    index = str(index_type).strip().upper()
+    return "L2" if index in {"IVF", "HNSW"} else "IP"
 
 
 def to_relevance_score(raw_score: float, metric_type: str) -> float:

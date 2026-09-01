@@ -36,7 +36,7 @@ class VectorScoreSemanticsTest(unittest.TestCase):
         )
 
         self.assertEqual(score_semantics.faiss_metric_for_index("Flat"), "IP")
-        self.assertEqual(score_semantics.faiss_metric_for_index("IVF"), "IP")
+        self.assertEqual(score_semantics.faiss_metric_for_index("IVF"), "L2")
         self.assertEqual(score_semantics.faiss_metric_for_index("HNSW"), "L2")
 
     def test_faiss_load_restores_persisted_index_type(self):
