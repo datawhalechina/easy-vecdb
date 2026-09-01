@@ -275,6 +275,7 @@ class FAISSIndexConstructionModule:
             if os.path.exists(self.config_file):
                 with open(self.config_file, 'rb') as f:
                     config = pickle.load(f)
+                    self.index_type = config.get('index_type', self.index_type)
                     logger.info(f"加载索引配置: {config}")
             
             self.index_ready = True

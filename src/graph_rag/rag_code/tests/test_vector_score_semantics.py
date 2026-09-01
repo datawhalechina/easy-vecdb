@@ -1,5 +1,7 @@
 import importlib.util
+import pickle
 import sys
+import tempfile
 import types
 import unittest
 from pathlib import Path
@@ -37,6 +39,61 @@ class VectorScoreSemanticsTest(unittest.TestCase):
         self.assertEqual(score_semantics.faiss_metric_for_index("IVF"), "IP")
         self.assertEqual(score_semantics.faiss_metric_for_index("HNSW"), "L2")
 
+    def test_faiss_load_restores_persisted_index_type(self):
+        package = types.ModuleType("isolated")
+        package.__path__ = []
+        sys.modules["isolated"] = package
+        score_semantics = load_module(
+            "isolated.score_semantics",
+            MODULES_DIR / "score_semantics.py",
+        )
+
+        faiss = types.ModuleType("faiss")
+        faiss.Index = object
+        faiss.read_index = lambda path: SimpleNamespace()
+        sys.modules["faiss"] = faiss
+
+        for module_name, attribute in (
+            ("langchain_huggingface", "HuggingFaceEmbeddings"),
+            ("langchain_core.documents", "Document"),
+            ("langchain_openai", "OpenAIEmbeddings"),
+        ):
+            module = types.ModuleType(module_name)
+            setattr(module, attribute, object)
+            sys.modules[module_name] = module
+
+        faiss_module = load_module(
+            "isolated.faiss_index_construction",
+            MODULES_DIR / "faiss_index_construction.py",
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            index_file = Path(directory) / "faiss.index"
+            metadata_file = Path(directory) / "metadata.pkl"
+            config_file = Path(directory) / "config.pkl"
+            index_file.touch()
+            metadata_file.write_bytes(
+                pickle.dumps({"metadata": [], "id_to_index": {}})
+            )
+            config_file.write_bytes(pickle.dumps({"index_type": "HNSW"}))
+
+            indexer = faiss_module.FAISSIndexConstructionModule.__new__(
+                faiss_module.FAISSIndexConstructionModule
+            )
+            indexer.index_file = str(index_file)
+            indexer.metadata_file = str(metadata_file)
+            indexer.config_file = str(config_file)
+            indexer.index_type = "IVF"
+            indexer.metadata = []
+            indexer.id_to_index = {}
+
+            self.assertTrue(indexer.load_index())
+            self.assertEqual(indexer.index_type, "HNSW")
+            self.assertEqual(
+                score_semantics.faiss_metric_for_index(indexer.index_type),
+                "L2",
+            )
+
     def test_distance_metrics_map_lower_scores_to_higher_relevance(self):
         score_semantics = load_module(
             "score_semantics",
@@ -62,6 +119,22 @@ class VectorScoreSemanticsTest(unittest.TestCase):
         package = types.ModuleType("isolated")
         package.__path__ = []
         sys.modules["isolated"] = package
+
+        class Document:
+            def __init__(self, page_content, metadata):
+                self.page_content = page_content
+                self.metadata = metadata
+
+        documents = types.ModuleType("langchain_core.documents")
+        documents.Document = Document
+        sys.modules["langchain_core.documents"] = documents
+        retrievers = types.ModuleType("langchain_community.retrievers")
+        retrievers.BM25Retriever = object
+        sys.modules["langchain_community.retrievers"] = retrievers
+        neo4j = types.ModuleType("neo4j")
+        neo4j.GraphDatabase = object
+        sys.modules["neo4j"] = neo4j
+
         graph_indexing = types.ModuleType("isolated.graph_indexing")
         graph_indexing.GraphIndexingModule = object
         sys.modules["isolated.graph_indexing"] = graph_indexing
