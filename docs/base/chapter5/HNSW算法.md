@@ -4,24 +4,24 @@
 
 HNSW的成功，源于它巧妙地结合了两种经典的思想：
 
-1.​小世界网络​​：大家可能听过“六度分隔理论”，意思是地球上任何两个人，平均只需要通过六个中间人就能建立起联系。这就是小世界网络的体现
+1. **小世界网络**：大家可能听过“六度分隔理论”，意思是地球上任何两个人，平均只需要通过六个中间人就能建立起联系。这就是小世界网络的体现
 。这种网络的特点是：
 
-- 高聚类性​​：你的朋友之间，彼此也很可能互相是朋友（形成聚集的小团体）。
-- 短平均路径​​：尽管有聚集性，但任意两个节点之间的平均距离却很短。HNSW的目标就是构建一个具有类似特性的图，使得可以从任意节点出发，用很少的“步数”（跳跃）到达目标节点。
+- **高聚类性**：你的朋友之间，彼此也很可能互相是朋友（形成聚集的小团体）。
+- **短平均路径**：尽管有聚集性，但任意两个节点之间的平均距离却很短。HNSW的目标就是构建一个具有类似特性的图，使得可以从任意节点出发，用很少的“步数”（跳跃）到达目标节点。
 
-  ​2.​跳表​​：想象一本有目录的书。目录就是书的“高层结构”，它章节标题，让你能快速定位到大概范围。然后你翻到对应章节，再通过更细的标题或页码找到具体内容。跳表就是类似的多层索引结构，在数据链表上建立多层“快车道”，从高层粗犷检索开始，逐层细化，直到最底层找到目标，从而避免从头到尾的遍历。
+2. **跳表**：想象一本有目录的书。目录就是书的“高层结构”，它章节标题，让你能快速定位到大概范围。然后你翻到对应章节，再通过更细的标题或页码找到具体内容。跳表就是类似的多层索引结构，在数据链表上建立多层“快车道”，从高层粗犷检索开始，逐层细化，直到最底层找到目标，从而避免从头到尾的遍历。
   
-  HNSW正是将​​小世界网络​​的连通性和​​跳表​​的分层思想融合在了一起
+HNSW 正是将 **小世界网络** 的连通性和 **跳表** 的分层思想融合在了一起。
 
-## 2.算法原理分步详解​
+## 2.算法原理分步详解
 
 HNSW（**Hierarchical Navigable Small World**，分层可导航小世界图）是一种基于图结构的**近似最近邻（ANN）搜索算法**，  
 它通过构建一个多层次的“可导航小世界图”，让搜索过程像“在城市地图中找路”一样高效。
 
 其核心思想是：  
 
-> **先在高层图中快速找到大致方向，再在底层图中精确定位目标。**
+> **先在高层图中快速找到大致方向，再在底层图中搜索近邻候选。**
 
 下面我们来分步解析 HNSW 的工作原理。
 
@@ -83,12 +83,12 @@ HNSW 的搜索过程与构建阶段类似，同样遵循“**自顶向下、逐�
 - 在更低层的图中继续搜索，逐步缩小搜索范围；
 - 每下一层，节点密度增加，搜索精度提升。
 
-#### 步骤 3：底层精确搜索
+#### 步骤 3：底层近似搜索
 
 - 到达底层（Level 0）后，算法会使用“优先队列 + 局部扩展搜索”策略：  
   - 维护一个候选节点集合（Candidate List）；  
   - 扩展其邻居并更新最近邻；  
-  - 重复直到候选集不再变化或达到设定搜索深度（参数 `ef_search`）。  
+  - `ef_search` 控制动态候选集大小，并非展开节点数上限；候选队列为空，或最近候选远于当前最远结果时停止。
 - 最终返回距离最近的 K 个节点。
 
 ---
@@ -99,7 +99,7 @@ HNSW 的搜索过程与构建阶段类似，同样遵循“**自顶向下、逐�
 | ----------------- | -------------------- | ------------------------------------ |
 | `M`               | 每个节点的最大邻居数 | 越大图越稠密，召回率高但内存开销增大 |
 | `ef_construction` | 构建阶段的搜索宽度   | 控制索引构建质量与速度               |
-| `ef_search`       | 查询阶段的搜索宽度   | 值越大，精度越高但搜索时间更长       |
+| `ef_search`       | 查询阶段的搜索宽度   | 越大通常召回率越高，但查询时间也更长 |
 
 ---
 
@@ -133,15 +133,16 @@ HNSW 的搜索过程与构建阶段类似，同样遵循“**自顶向下、逐�
 
 HNSW 通过在不同层次建立稀疏图结构，使搜索可以**先全局定位、再局部精查**，  
 在高维向量检索任务中实现了**近似最优的性能与速度平衡**。  
-它已成为当前向量数据库（如 **Milvus、FAISS、Weaviate**）中默认启用的主流索引算法。
 
 ## 3.HNSW算法实现
 
 🧠 HNSW算法Python实现
 
+`SimpleHNSW` 未实现论文中的邻居选择启发式。
+
 ### 3.1我们导入必要的库：
 
-```python 
+```python
 import numpy as np
 import random
 import math
@@ -265,6 +266,11 @@ class SimpleHNSW:
         # 从最高层开始搜索，找到每层的最近邻
         current_point = self.entry_point
         current_max_level = self.entry_level
+
+        # 新节点高于当前最高层时，先在新增层登记，最后再更新入口点
+        if level > current_max_level:
+            for l in range(current_max_level + 1, level + 1):
+                self.layers[l][point_id] = []
         
         # 从顶层开始搜索，找到每层的入口点
         for l in range(current_max_level, level, -1):
@@ -308,6 +314,17 @@ class SimpleHNSW:
             self.entry_point = point_id
             self.entry_level = level
     
+    def _check_search_args(self, query, k, ef_search):
+        """检查查询参数，并把查询向量转换为浮点数组"""
+        if k < 1 or k > len(self.data_points):
+            raise ValueError("k 必须在 1 和当前节点数之间")
+        if ef_search < k:
+            raise ValueError("ef_search 必须大于或等于 k")
+        query = np.asarray(query, dtype=float)
+        if query.shape != self.data_points[0].shape:
+            raise ValueError("查询向量维度必须与索引向量一致")
+        return query
+
     def search(self, query, k=5, ef_search=50):
         """
         在HNSW中搜索最近邻
@@ -315,11 +332,12 @@ class SimpleHNSW:
         参数:
         - query: 查询向量
         - k: 返回的最近邻数量
-        - ef_search: 搜索时的候选集大小（越大精度越高但速度越慢）
+        - ef_search: 搜索时的候选集大小（越大通常召回率越高，但速度越慢）
         
         返回:
         - 包含(节点ID, 距离)的列表，按距离升序排列
         """
+        query = self._check_search_args(query, k, ef_search)
         if self.entry_point is None:
             return []
         
@@ -339,7 +357,7 @@ class SimpleHNSW:
         return [(idx, dist) for dist, idx in results[:k]]
     def search_with_path(self, query, k=5, ef_search=50):
         """
-        在HNSW中搜索最近邻，并记录搜索路径
+        在 HNSW 中搜索最近邻，并记录各层候选的展开顺序
         
         参数:
         - query: 查询向量
@@ -348,8 +366,9 @@ class SimpleHNSW:
         
         返回:
         - results: 包含(节点ID, 距离)的列表
-        - search_path: 每层的搜索路径字典
+        - search_path: 每层候选展开顺序的字典
         """
+        query = self._check_search_args(query, k, ef_search)
         if self.entry_point is None:
             return [], {}
         
@@ -357,7 +376,7 @@ class SimpleHNSW:
         current_level = self.entry_level
         search_path = {}
         
-        # 从顶层开始搜索，记录路径
+        # 从顶层开始搜索，记录候选展开顺序
         for l in range(current_level, 0, -1):
             path_nodes = [current_point]
             results = self._search_layer_with_path(query, current_point, 1, l, path_nodes)
@@ -370,20 +389,20 @@ class SimpleHNSW:
         results = self._search_layer_with_path(query, current_point, ef_search, 0, path_nodes)
         search_path[0] = path_nodes
         
-        # 返回前k个结果和搜索路径
+        # 返回前 k 个结果和各层候选展开顺序
         final_results = [(idx, dist) for dist, idx in results[:k]]
         return final_results, search_path
     
     def _search_layer_with_path(self, query, entry_point, ef, layer, path_nodes):
         """
-        在指定层搜索最近邻，并记录搜索路径
+        在指定层搜索最近邻，并记录候选展开顺序
         
         参数:
         - query: 查询向量
         - entry_point: 搜索起始点
         - ef: 搜索范围
         - layer: 搜索的层级
-        - path_nodes: 用于记录搜索路径的列表
+        - path_nodes: 用于记录候选展开顺序的列表
         
         返回:
         - 搜索结果列表
@@ -393,28 +412,29 @@ class SimpleHNSW:
             
         visited = set([entry_point])
         candidates = [(self._euclidean_distance(query, self.data_points[entry_point]), entry_point)]
-        results = []
+        results = [(candidates[0][0], entry_point)]
         
-        while candidates and len(results) < ef:
+        while candidates:
             candidates.sort(key=lambda x: x[0])
             current_dist, current_point = candidates.pop(0)
             
-            # 记录访问的节点到路径中
+            if results and current_dist > results[-1][0]:
+                break
+
+            # 记录候选被展开的顺序；相邻项不一定由图边直接连接
             if current_point not in path_nodes:
                 path_nodes.append(current_point)
             
-            if not results or current_dist < results[-1][0]:
-                results.append((current_dist, current_point))
-                results.sort(key=lambda x: x[0])
-                if len(results) > ef:
-                    results = results[:ef]
-            
-            # 探索邻居节点
             for neighbor in self.layers[layer][current_point]:
                 if neighbor not in visited:
                     visited.add(neighbor)
                     dist = self._euclidean_distance(query, self.data_points[neighbor])
-                    candidates.append((dist, neighbor))
+                    if len(results) < ef or dist < results[-1][0]:
+                        results.append((dist, neighbor))
+                        results.sort(key=lambda x: x[0])
+                        if len(results) > ef:
+                            results = results[:ef]
+                        candidates.append((dist, neighbor))
         
         return results
 ```
@@ -557,26 +577,24 @@ def _plot_step_5(ax, hnsw, data, layers, h_gap, query):
     ax.set_title('5. 入口点选择 (Top Layer)')
 
 def _plot_step_6(ax, hnsw, data, layers, h_gap, query, path):
-    """步骤6：演示下潜检索过程"""
+    """步骤6：展示各层候选的展开顺序与层间下潜"""
     _draw_3d_base(ax, hnsw, data, layers, h_gap, query)
     if path and query is not None:
-        ax.scatter(query[0], query[1], 0, c='#FFD93D', marker='*', s=0, alpha=0, label='查询点') # Legend hack
+        ax.scatter(query[0], query[1], 0, c='#FFD93D', marker='*', s=0, alpha=0, label='查询点')  # Legend hack
         for l, p in path.items():
             z = l * h_gap
             pts = data[p]
-            ax.plot(pts[:,0], pts[:,1], [z]*len(pts), c='red', lw=2 if l>0 else 1, label='搜索路径')
-            ax.scatter(pts[:,0], pts[:,1], z, c='orange', s=50, edgecolors='black', label='访问节点')
-            for n in p[:3]:
-                for nb in hnsw.layers[l][n]:
-                    nb_pt = data[nb]
-                    ax.plot([data[n][0], nb_pt[0]], [data[n][1], nb_pt[1]], [z, z], c='purple', alpha=0.2, label='考察连线')
-            if l > 0 and (l-1) in path:
-                prev = data[path[l-1][0]]
-                ax.plot([pts[-1,0], prev[0]], [pts[-1,1], prev[1]], [z, z-h_gap], c='blue', ls='--', label='层间下潜')
-    ax.set_title('6. 下潜检索过程')
+            order = np.arange(len(p))
+            ax.scatter(pts[:,0], pts[:,1], z, c=order, cmap='Oranges', s=55,
+                       edgecolors='black', label='已展开候选（浅→深）')
+            if l > 0 and (l-1) in path and p[-1] == path[l-1][0]:
+                lower = data[path[l-1][0]]
+                ax.plot([pts[-1,0], lower[0]], [pts[-1,1], lower[1]], [z, z-h_gap],
+                        c='blue', ls='--', label='同一节点下潜')
+    ax.set_title('6. 分层候选展开与下潜')
 
 def _plot_step_7(ax, hnsw, data, query, path, results, ef=20):
-    """步骤7：底层精确搜索 (Layer 0)"""
+    """步骤7：底层近似搜索 (Layer 0)"""
     l0_nodes = list(hnsw.layers[0].keys())
     ax.scatter(data[l0_nodes, 0], data[l0_nodes, 1], c='#ecf0f1', s=30, label='数据点')
     if path and 0 in path:
@@ -584,17 +602,17 @@ def _plot_step_7(ax, hnsw, data, query, path, results, ef=20):
         inspected = {nb for n in p for nb in hnsw.layers[0][n]} - set(p)
         if inspected:
             ins_pts = data[list(inspected)]
-            ax.scatter(ins_pts[:, 0], ins_pts[:, 1], c='#9b59b6', s=40, alpha=0.5, label='候选邻居')
-        for i in range(len(p_pts)-1):
-            ax.arrow(p_pts[i,0], p_pts[i,1], p_pts[i+1,0]-p_pts[i,0], p_pts[i+1,1]-p_pts[i,1],
-                     head_width=0.2, fc='#e67e22', ec='#e67e22', length_includes_head=True, zorder=5)
-        ax.scatter(p_pts[:,0], p_pts[:,1], c='#e67e22', s=60, edgecolors='black', label='移动轨迹', zorder=6)
-        ax.scatter(p_pts[0,0], p_pts[0,1], c='red', marker='v', edgecolors='black', s=150, label='Layer 0 入口', zorder=10)
+            ax.scatter(ins_pts[:, 0], ins_pts[:, 1], c='#9b59b6', s=40, alpha=0.5, label='发现但未展开')
+        order = np.arange(len(p))
+        ax.scatter(p_pts[:,0], p_pts[:,1], c=order, cmap='Oranges', s=65,
+                   edgecolors='black', label='候选展开顺序（浅→深）', zorder=6)
+        ax.scatter(p_pts[0,0], p_pts[0,1], c='red', marker='v', edgecolors='black',
+                   s=150, label='Layer 0 入口', zorder=10)
     if query is not None: ax.scatter(query[0], query[1], c='#FFD93D', marker='*', edgecolors='black', s=350, label='查询点')
     if results:
         res_pts = data[[r[0] for r in results]]
         ax.scatter(res_pts[:, 0], res_pts[:, 1], c='red', s=100, marker='o', alpha=0.8, label='HNSW结果')
-    ax.set_title(f'7. 底层精搜 (ef={ef})')
+    ax.set_title(f'7. 底层近似搜索 (ef={ef})')
 
 def _plot_step_8(ax, data, query, results):
     """步骤8：结果对比与召回率分析"""
@@ -615,7 +633,7 @@ def _plot_step_8(ax, data, query, results):
         ax.text(pt[0], pt[1], "漏检", color='red', fontweight='bold')
     ax.set_title(f'8. 结果对比 (召回率: {recall:.1%})')
 
-def visualize_hnsw(hnsw, query_point=None, results=None, search_path=None):
+def visualize_hnsw(hnsw, query_point=None, results=None, search_path=None, ef_search=30, output_path=None):
     """简化后的可视化入口函数"""
     if not hnsw.data_points: return
     data = np.array(hnsw.data_points)
@@ -635,15 +653,21 @@ def visualize_hnsw(hnsw, query_point=None, results=None, search_path=None):
     _plot_step_4(axes[3], hnsw, layers, search_path)
     _plot_step_5(axes[4], hnsw, data, layers, h_gap, query_point)
     _plot_step_6(axes[5], hnsw, data, layers, h_gap, query_point, search_path)
-    _plot_step_7(axes[6], hnsw, data, query_point, search_path, results)
+    _plot_step_7(axes[6], hnsw, data, query_point, search_path, results, ef=ef_search)
     _plot_step_8(axes[7], data, query_point, results)
     
-    for ax in axes: _sort_legend(ax)
-    plt.tight_layout(); plt.show()
+    for i, ax in enumerate(axes):
+        if i != 3:
+            _sort_legend(ax)
+    plt.tight_layout()
+    if output_path:
+        fig.savefig(output_path, dpi=100, bbox_inches='tight', facecolor='white')
+    plt.show()
+    return fig
 
 # --- 3. 性能演示 ---
 
-def demonstrate_hnsw_performance():
+def demonstrate_hnsw_performance(ef_search=30):
     """演示HNSW性能对比"""
     print("=" * 60)
     print("HNSW算法性能演示")
@@ -673,7 +697,7 @@ def demonstrate_hnsw_performance():
     
     # 使用HNSW搜索
     start_time = time.time()
-    hnsw_results, search_path = hnsw.search_with_path(query_point, k=5, ef_search=30)
+    hnsw_results, search_path = hnsw.search_with_path(query_point, k=5, ef_search=ef_search)
     hnsw_time = time.time() - start_time
     
     # 暴力搜索作为基准
@@ -702,13 +726,17 @@ def demonstrate_hnsw_performance():
     recall = len(intersection) / len(bf_indices_set)
     print(f"召回率: {recall:.2%} ({len(intersection)}/{len(bf_indices_set)})")
     
-    return hnsw, data, query_point, hnsw_results, bf_indices, search_path
+    return hnsw, data, query_point, hnsw_results, bf_indices, search_path, ef_search
 
 # 1. 运行标准演示
-hnsw, data, query, hnsw_results, bf_results, search_path = demonstrate_hnsw_performance()
+hnsw, data, query, hnsw_results, bf_results, search_path, ef_search = demonstrate_hnsw_performance()
 
 # 2. 调用可视化
-visualize_hnsw(hnsw, query, hnsw_results, search_path)
+visualize_hnsw(
+    hnsw, query, hnsw_results, search_path,
+    ef_search=ef_search,
+    output_path="../../docs/public/images/HNSW算法结果.png",
+)
 
 ```
 
@@ -742,9 +770,9 @@ HNSW结果距离: [np.float64(1.2234940484615728), np.float64(1.415148522001549)
 召回率: 100.00% (5/5)
 ```
 
-![alt text](/images/HNSW算法结果.png)
+![HNSW 八步建图与近似搜索流程](/images/HNSW算法结果.png)
 
-### 3.4参数影响分析
+### 3.4参数组合对比
 
 ```python
 def analyze_hnsw_parameters():

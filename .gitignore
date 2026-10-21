@@ -168,3 +168,9 @@ out/
 # other files
 /model/
 /data/sift/
+
+# Local agent and generated caches
+.codex/
+.codex-review/
+/.vitepress/
+__pycache__/
