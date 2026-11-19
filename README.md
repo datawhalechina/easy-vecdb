@@ -57,6 +57,10 @@
 | [Chapter 4 Milvus的AI应用开发：基于BM25的混合搜索向量数据库开发实战](./docs/Milvus/chapter4/Milvus的AI应用开发.md) | RAG、混合向量检索应用 | ✅ |
 | [Chapter 5 Milvus的AI应用开发：图像检索应用实战](./docs/Milvus/docs/Milvus/chapter5/Milvus的AI应用开发.md) | 图像检索应用 | ✅ |
 | [Chapter 6 Milvus 选学部分](./docs/Milvus/chapter6/Milvus底层架构详解.md) |Milvus底层架构详解、Milvus reranker、Milvus Lite部署与应用、MinerU部署教程 | ✅ |
+| [Chapter 7 Milvus 3.0：外部集合、数据模型与索引](./docs/Milvus/chapter7/7.0-Milvus3.0.md) | 版本变化、外部集合与快照、检索增强、索引与性能选择 | ✅ |
+| [7.5A Milvus 3.0 官方实战项目](./docs/Milvus/chapter7/7.5A-Milvus3.0官方实战项目.md) | MinHash 近重复、函数链重排、StructArray、EmbeddingList、分面聚合 | ✅ |
+| [7.5B 端到端实战：12345 历史工单智能检索与知识发布](./docs/Milvus/chapter7/7.5B-Milvus3.0端到端实战.md) | 查询面 + 发布面：门禁、回滚、增量发布，配套 notebook 全链路可跑 | ✅ |
+| [Chapter 7.6 深入与进阶](./docs/Milvus/chapter7/7.6-深入与进阶.md) | 重排三阶段、四层归并、选型 | ⏳  |
 | <strong>第五部分：基于向量数据库的AI应用开发</strong> |  |  |
 | [Project 1 基于Annoy的推荐系统召回](./docs/projects/project1/README.md) | Annoy + DSSM 推荐召回 | ✅ |
 | [Project 2 基于FAISS框架RAG实战项目](./docs/projects/project2/README.md) | RAG with FAISS | ✅ |
@@ -75,15 +79,6 @@
 > 📘 本项目旨在让你从 **原理 → 实践 → 部署** 全流程掌握向量数据库核心知识与实战能力。
 
 
-## 🛠️ 项目目录结构说明
-
-```
-.
-├── docs 向量数据库学习指南与项目文档
-├── data 通用示例数据目录
-├── src  项目相关代码
-└── tmp  临时文件目录
-```
 
 ## 📄 补充资源
 
@@ -102,7 +97,7 @@
 
 ### 核心贡献者
 - [牧小熊-项目负责人](https://github.com/muxiaoxiong)(Datawhale成员)
-- [刘晓-项目贡献者](https://github.com/Halukisan)(Datawhale鲸英助教)
+- [刘晓-项目贡献者](https://github.com/Halukisan)(Datawhale成员)
 - [柯慕灵-项目贡献者](https://github.com/1985312383)(Datawhale成员)
 - [赵鑫龙-项目贡献者](https://github.com/xiaoming910)(Datawhale精英助教)
 - [陈辅元-项目贡献者](https://github.com/Fyuan0206)(Datawhale成员)

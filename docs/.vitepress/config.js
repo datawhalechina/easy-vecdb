@@ -192,6 +192,22 @@ export default defineConfig({
             { text: 'MinerU 部署教程', link: '/Milvus/chapter5/MinerU部署教程' }
           ]
         },
+        /* Chapter 7 · Milvus 3.0 —— 内容审核中，审核通过后再取消注释上线
+        ,
+        {
+          text: 'Chapter 7 · Milvus 3.0 外部集合与端到端实战',
+          items: [
+            { text: '7.0 Milvus 3.0：从 2.x 走过来', link: '/Milvus/chapter7/7.0-Milvus3.0' },
+            { text: '7.1 环境升级', link: '/Milvus/chapter7/7.1-Milvus3.0环境升级' },
+            { text: '7.2 外部集合与快照', link: '/Milvus/chapter7/7.2-Milvus3.0外部集合与快照' },
+            { text: '7.3 数据模型与检索增强', link: '/Milvus/chapter7/7.3-Milvus3.0数据模型与检索增强' },
+            { text: '7.4 索引与性能选择', link: '/Milvus/chapter7/7.4-Milvus3.0索引与性能选择' },
+            { text: '7.5A 官方实战项目', link: '/Milvus/chapter7/7.5A-Milvus3.0官方实战项目' },
+            { text: '7.5B 端到端实战', link: '/Milvus/chapter7/7.5B-Milvus3.0端到端实战' },
+            { text: '7.6 深入与进阶', link: '/Milvus/chapter7/7.6-深入与进阶' }
+          ]
+        },
+        */
       ],
       '/more/': [
         {

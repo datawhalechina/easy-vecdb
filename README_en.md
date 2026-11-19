@@ -62,6 +62,10 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 | [Chapter 4 Milvus AI Applications: Hybrid Search with BM25](./docs/milvus/chapter4/Milvus的AI应用开发.md) | RAG and hybrid retrieval | ✅ |
 | [Chapter 5 Milvus AI Applications: Image Retrieval](./docs/milvus/docs/Milvus/chapter5/Milvus的AI应用开发.md) | Image retrieval system | ✅ |
 | [Chapter 6 Milvus Advanced Topics](./docs/milvus/chapter6/Milvus底层架构详解.md) | Internal architecture, reranker, Milvus Lite, MinerU | ✅ |
+| [Chapter 7 Milvus 3.0: External Collections, Data Model & Indexing](./docs/Milvus/chapter7/7.0-Milvus3.0.md) | version changes, external collections & snapshots, retrieval enhancements, index choices | ✅ |
+| [7.5A Official Hands-on Projects](./docs/Milvus/chapter7/7.5A-Milvus3.0官方实战项目.md) | MinHash near-duplicates, function chains, StructArray, EmbeddingList, facet aggregation  | ✅ |
+| [7.5B End-to-End: 12345 Ticket Retrieval & Knowledge Publishing](./docs/Milvus/chapter7/7.5B-Milvus3.0端到端实战.md) | Query side + release side: acceptance gate, rollback, incremental release | ✅ |
+| [Chapter 7.6 Advanced Topics](./docs/Milvus/chapter7/7.6-深入与进阶.md) | Rerank stages, multi-level merge, selection | ⏳  |
 | <strong>Part V: AI Applications Based on Vector Databases</strong> |  |  |
 | [Project 1 Recommendation Recall with Annoy](./docs/projects/project1/README.md) | DSSM + Annoy vector recall | ✅ |
 | [Project 2 RAG with FAISS](./docs/projects/project2/README.md) | RAG using FAISS | ✅ |
@@ -80,15 +84,6 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 
 > 📘 This project aims to help you master vector databases from **principles → practice → deployment**.
 
-## 🛠️ Project Structure
-
-```
-.
-├── docs Vector database tutorials and documentation
-├── data Common example datasets
-├── src Project-related source code
-└── tmp Temporary files
-```
 
 
 ## 📄 Additional Resources
@@ -108,7 +103,7 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 
 ### Core Contributors
 - [Muxiaoxiong – Project Lead](https://github.com/muxiaoxiong) (Datawhale Member)
-- [Liu Xiao – Contributor](https://github.com/Halukisan) (Datawhale Teaching Assistant)
+- [Liu Xiao – Contributor](https://github.com/Halukisan) (Datawhale Member)
 - [Ke Muling – Contributor](https://github.com/1985312383) (Datawhale Member)
 - [Zhao Xinlong – Contributor](https://github.com/xiaoming910) (Datawhale Teaching Assistant)
 - [Chen Fuyuan – Contributor](https://github.com/Fyuan0206) (Datawhale Member)
