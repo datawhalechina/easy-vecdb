@@ -86,6 +86,8 @@ export default defineConfig({
             { text: 'IVF算法', link: '/base/chapter5/IVF算法' },
             { text: 'HNSW算法', link: '/base/chapter5/HNSW算法' },
             { text: 'PQ算法', link: '/base/chapter5/PQ算法' },
+            { text: 'Vamana算法', link: '/base/chapter5/Vamana算法' },
+            { text: 'DiskANN系统', link: '/base/chapter5/DiskANN系统' },
             { text: 'LSH算法', link: '/base/chapter5/LSH算法' },
           ]
         },
