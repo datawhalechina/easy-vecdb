@@ -13,6 +13,8 @@ export default defineConfig({
   base: baseConfig, // 这里直接使用上面计算好的变量
   lastUpdated: true,
   ignoreDeadLinks: true,
+  // 7.6 还在写作中，先不参与构建；写完把下面这一行删掉即可
+  srcExclude: ['Milvus/chapter7/7.6-深入与进阶.md'],
 
   head: [
     ['link', { rel: 'icon', href: `${baseConfig}favicon.ico` }],
@@ -201,8 +203,7 @@ export default defineConfig({
             { text: '7.3 数据模型与检索增强', link: '/Milvus/chapter7/7.3-Milvus3.0数据模型与检索增强' },
             { text: '7.4 索引与性能选择', link: '/Milvus/chapter7/7.4-Milvus3.0索引与性能选择' },
             { text: '7.5A 官方实战项目', link: '/Milvus/chapter7/7.5A-Milvus3.0官方实战项目' },
-            { text: '7.5B 端到端实战', link: '/Milvus/chapter7/7.5B-Milvus3.0端到端实战' },
-            { text: '7.6 深入与进阶', link: '/Milvus/chapter7/7.6-深入与进阶' }
+            { text: '7.5B 端到端实战', link: '/Milvus/chapter7/7.5B-Milvus3.0端到端实战' }
           ]
         },
         
