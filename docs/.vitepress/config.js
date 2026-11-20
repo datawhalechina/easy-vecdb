@@ -189,9 +189,7 @@ export default defineConfig({
             { text: 'Milvus Lite部署教程', link: '/Milvus/chapter6/Milvus Lite部署与应用' },
             { text: 'MinerU 部署教程', link: '/Milvus/chapter5/MinerU部署教程' }
           ]
-        },
-        /* Chapter 7 · Milvus 3.0 —— 内容审核中，审核通过后再取消注释上线
-        ,
+        },        
         {
           text: 'Chapter 7 · Milvus 3.0 外部集合与端到端实战',
           items: [
@@ -205,7 +203,7 @@ export default defineConfig({
             { text: '7.6 深入与进阶', link: '/Milvus/chapter7/7.6-深入与进阶' }
           ]
         },
-        */
+        
       ],
       '/more/': [
         {
