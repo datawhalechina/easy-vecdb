@@ -39,6 +39,8 @@
 | [Chapter 3 向量嵌入算法基础](./docs/base/chapter3/向量嵌入算法基础.md) | Word2Vec、Transformer Embedding | ✅ |
 | [Chapter 4 向量搜索算法基础](./docs/base/chapter4/向量搜索算法基础.md) | 暴力检索、向量相似度 | ✅ |
 | [Chapter 5 ANN 搜索算法](./docs/base/chapter5/ANN搜索算法.md) | IVF、PQ、HNSW、LSH、Annoy算法原理与代码实战 | ✅ |
+| [Chapter 5 Vamana 算法](./docs/base/chapter5/Vamana算法.md) | 单层近邻图、鲁棒裁剪、贪心搜索 | ✅ |
+| [Chapter 5 DiskANN 系统](./docs/base/chapter5/DiskANN系统.md) | 磁盘图索引、PQ 压缩、批量读取 | ✅ |
 | [Chapter 6 实现你自己的向量数据库](./docs/base/chapter6/实现你自己的向量数据库.md) | 向量数据库最小实现 | ✅ |
 | <strong>第二部分：Annoy 教程（Annoy）</strong> | 轻量级近似最近邻检索库 |  |
 | [Chapter 1 Annoy入门与环境搭建](./docs/Annoy/chapter1/Annoy入门与环境搭建.md) | 安装配置、基础概念 | ✅ |
