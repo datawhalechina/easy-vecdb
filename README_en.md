@@ -44,6 +44,8 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 | [Chapter 3 Vector Embedding Basics](./docs/base/chapter3/向量嵌入算法基础.md) | Word2Vec, Transformer embeddings | ✅ |
 | [Chapter 4 Vector Search Basics](./docs/base/chapter4/向量搜索算法基础.md) | Brute-force search and similarity metrics | ✅ |
 | [Chapter 5 ANN Search Algorithms](./docs/base/chapter5/ANN搜索算法.md) | IVF, PQ, HNSW, LSH, Annoy principles & code | ✅ |
+| [Chapter 5 Vamana Algorithm](./docs/base/chapter5/Vamana算法.md) | Single-layer proximity graph, robust pruning, greedy search | ✅ |
+| [Chapter 5 DiskANN System](./docs/base/chapter5/DiskANN系统.md) | Disk-based graph index, PQ compression, batched reads | ✅ |
 | [Chapter 6 Build Your Own Vector Database](./docs/base/chapter6/实现你自己的向量数据库.md) | Minimal vector DB implementation | ✅ |
 | <strong>Part II: Annoy Tutorial</strong> | Lightweight ANN search library |  |
 | [Chapter 1 Annoy Introduction & Setup](./docs/Annoy/chapter1/Annoy入门与环境搭建.md) | Installation and core concepts | ✅ |
