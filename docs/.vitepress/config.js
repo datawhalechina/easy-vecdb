@@ -13,9 +13,6 @@ export default defineConfig({
   base: baseConfig, // 这里直接使用上面计算好的变量
   lastUpdated: true,
   ignoreDeadLinks: true,
-  // 7.6 还在写作中，先不参与构建；写完把下面这一行删掉即可
-  srcExclude: ['Milvus/chapter7/7.6-深入与进阶.md'],
-
   head: [
     ['link', { rel: 'icon', href: `${baseConfig}favicon.ico` }],
     ['meta', { name: 'theme-color', content: '#3c8772' }]
