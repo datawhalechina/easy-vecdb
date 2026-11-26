@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
 // 1. 获取环境变量并判断
 // 如果环境变量 EDGEONE 等于 '1'，说明在 EdgeOne 环境，使用根路径 '/'
@@ -6,7 +7,7 @@ import { defineConfig } from 'vitepress'
 const isEdgeOne = process.env.EDGEONE === '1'
 const baseConfig = isEdgeOne ? '/' : '/easy-vecdb/'
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: 'EasyVecDB 教程',
   description: '向量数据库学习与实战指南',
   lang: 'zh-CN',
@@ -200,7 +201,8 @@ export default defineConfig({
             { text: '7.3 数据模型与检索增强', link: '/Milvus/chapter7/7.3-Milvus3.0数据模型与检索增强' },
             { text: '7.4 索引与性能选择', link: '/Milvus/chapter7/7.4-Milvus3.0索引与性能选择' },
             { text: '7.5A 官方实战项目', link: '/Milvus/chapter7/7.5A-Milvus3.0官方实战项目' },
-            { text: '7.5B 端到端实战', link: '/Milvus/chapter7/7.5B-Milvus3.0端到端实战' }
+            { text: '7.5B 端到端实战', link: '/Milvus/chapter7/7.5B-Milvus3.0端到端实战' },
+            { text: '7.6 深入与进阶', link: '/Milvus/chapter7/7.6-深入与进阶' }
           ]
         },
         
@@ -305,4 +307,4 @@ export default defineConfig({
       copyright: '<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备2026002630号-1</a> | <a href="https://beian.mps.gov.cn/#/query/webSearch?code=11010602202215" rel="noreferrer" target="_blank">京公网安备11010602202215号</a>',
     },
   },
-})
+}))
