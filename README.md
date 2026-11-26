@@ -62,7 +62,7 @@
 | [Chapter 7 Milvus 3.0：外部集合、数据模型与索引](./docs/Milvus/chapter7/7.0-Milvus3.0.md) | 版本变化、外部集合与快照、检索增强、索引与性能选择 | ✅ |
 | [7.5A Milvus 3.0 官方实战项目](./docs/Milvus/chapter7/7.5A-Milvus3.0官方实战项目.md) | MinHash 近重复、函数链重排、StructArray、EmbeddingList、分面聚合 | ✅ |
 | [7.5B 端到端实战：12345 历史工单智能检索与知识发布](./docs/Milvus/chapter7/7.5B-Milvus3.0端到端实战.md) | 查询面 + 发布面：门禁、回滚、增量发布，配套 notebook 全链路可跑 | ✅ |
-| [Chapter 7.6 深入与进阶](./docs/Milvus/chapter7/7.6-深入与进阶.md) | 重排三阶段、四层归并、选型 | ⏳  |
+| [Chapter 7.6 深入与进阶](./docs/Milvus/chapter7/7.6-深入与进阶.md) | FunctionChain 改分、存储与写入引擎、StructArray、Regex 过滤、聚合与排序 | ✅ |
 | <strong>第五部分：基于向量数据库的AI应用开发</strong> |  |  |
 | [Project 1 基于Annoy的推荐系统召回](./docs/projects/project1/README.md) | Annoy + DSSM 推荐召回 | ✅ |
 | [Project 2 基于FAISS框架RAG实战项目](./docs/projects/project2/README.md) | RAG with FAISS | ✅ |

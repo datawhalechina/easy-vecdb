@@ -67,7 +67,7 @@ The project is divided into **Fundamentals** and **Practice** sections, correspo
 | [Chapter 7 Milvus 3.0: External Collections, Data Model & Indexing](./docs/Milvus/chapter7/7.0-Milvus3.0.md) | version changes, external collections & snapshots, retrieval enhancements, index choices | ✅ |
 | [7.5A Official Hands-on Projects](./docs/Milvus/chapter7/7.5A-Milvus3.0官方实战项目.md) | MinHash near-duplicates, function chains, StructArray, EmbeddingList, facet aggregation  | ✅ |
 | [7.5B End-to-End: 12345 Ticket Retrieval & Knowledge Publishing](./docs/Milvus/chapter7/7.5B-Milvus3.0端到端实战.md) | Query side + release side: acceptance gate, rollback, incremental release | ✅ |
-| [Chapter 7.6 Advanced Topics](./docs/Milvus/chapter7/7.6-深入与进阶.md) | Rerank stages, multi-level merge, selection | ⏳  |
+| [Chapter 7.6 Advanced Topics](./docs/Milvus/chapter7/7.6-深入与进阶.md) | FunctionChain rerank, storage & write engine, StructArray, Regex filtering, aggregation & ORDER BY | ✅ |
 | <strong>Part V: AI Applications Based on Vector Databases</strong> |  |  |
 | [Project 1 Recommendation Recall with Annoy](./docs/projects/project1/README.md) | DSSM + Annoy vector recall | ✅ |
 | [Project 2 RAG with FAISS](./docs/projects/project2/README.md) | RAG using FAISS | ✅ |
