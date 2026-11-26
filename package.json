@@ -10,7 +10,9 @@
   },
   "devDependencies": {
     "markdown-it-mathjax3": "^4.3.2",
-    "vitepress": "^1.6.4"
+    "mermaid": "^11.17.2",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17"
   },
   "engines": {
     "node": ">=18"
